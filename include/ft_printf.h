@@ -6,7 +6,7 @@
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 11:13:38 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/11/16 10:40:53 by mait-elk         ###   ########.fr       */
+/*   Updated: 2023/11/16 15:35:34 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,11 @@ int		ft_printf(const char	*s, ...);
 size_t	_prt_char(char c);
 size_t	_prt_str(const char *s);
 size_t	_prt_ptr(unsigned long ptr, char *base);
+void	_nsx_prtint(int n);
+size_t	_nsx_prtlint(int n);
+void	_nsx_prtuint(unsigned int n);
+size_t	_nsx_prtluint(unsigned int n);
+size_t	_prt_ptrx(unsigned long ptr, char *base);
 size_t	_prt_dec(int n);
 
 size_t	_nsx_strlen(const char *s);

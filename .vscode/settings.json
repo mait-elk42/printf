@@ -5,6 +5,11 @@
 		"stdlib.h": "c",
 		"stdarg.h": "c",
 		"unistd.h": "c",
-		"libft.h": "c"
+		"libft.h": "c",
+		"__locale": "c",
+		"__string": "c",
+		"string": "c",
+		"string_view": "c",
+		"limits.h": "c"
 	}
 }

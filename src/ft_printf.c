@@ -6,26 +6,31 @@
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 11:19:52 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/11/16 10:47:05 by mait-elk         ###   ########.fr       */
+/*   Updated: 2023/11/16 15:35:46 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static size_t	_handle_thispls(char c, va_list *vaddress)
+static size_t	_handle_this(char c, va_list *vaddress)
 {
-	size_t l;
-
-	l = 0;
 	if (c == 'c')
-		l += _prt_char(va_arg(*vaddress, int));
+		return (_prt_char(va_arg(*vaddress, int)));
 	else if (c == 's')
-		l += _prt_str(va_arg(*vaddress, char *));
+		return (_prt_str(va_arg(*vaddress, char *)));
 	else if (c == 'p')
-		l += _prt_ptr(va_arg(*vaddress, unsigned long), "0123456789abcdef");
-	else
-		l += _prt_char('%');
-	return (l);
+		return (_prt_ptr(va_arg(*vaddress, unsigned long), "0123456789abcdef"));
+	else if (c == 'x')
+		return (_prt_ptrx(va_arg(*vaddress, unsigned int), "0123456789abcdef"));
+	else if (c == 'X')
+		return (_prt_ptrx(va_arg(*vaddress, unsigned int), "0123456789ABCDEF"));
+	else if (c == 'u')
+		return (_nsx_prtluint(va_arg(*vaddress, unsigned int)));
+	else if (c == 'd' || c == 'i')
+		return (_nsx_prtlint(va_arg(*vaddress, int)));
+	else if (c == '%')
+		return (_prt_char('%'));
+	return (0);
 }
 
 int	ft_printf(const char	*s, ...)
@@ -40,13 +45,11 @@ int	ft_printf(const char	*s, ...)
 		if (*s == '%')
 		{
 			s++;
-			length += _handle_thispls(*(s++), &list);
+			length += _handle_this(*s, &list);
+			s++;
 		}
 		else
-		{
-			length++;
-			_prt_char(*(s++));
-		}
+			length += _prt_char(*(s++));
 	}
 	va_end(list);
 	return (length);
