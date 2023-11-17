@@ -1,30 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.h                                        :+:      :+:    :+:   */
+/*   ft_str.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/14 11:13:38 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/11/17 18:03:16 by mait-elk         ###   ########.fr       */
+/*   Created: 2023/11/17 17:44:15 by mait-elk          #+#    #+#             */
+/*   Updated: 2023/11/17 17:46:52 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PRINTF_H
-# define FT_PRINTF_H
-# include <stdarg.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <stdio.h>
+#include "ft_printf.h"
 
-int	ft_printf(const char	*s, ...);
-int	_prt_pointer(unsigned long ptr);
+int	_prt_char(char c)
+{
+	return (write(1, &c, 1));
+}
 
-int	_nsx_strlen(char *s);
-int	_prt_char(char c);
-int	_prt_str(char *s);
+int	_prt_str(char *s)
+{
+	int	i;
 
-int	_prt_uint(unsigned int i);
-int	_prt_int(int i);
-int	_prt_uinthex(unsigned int ptr,	char form);
-#endif
+	i = 0;
+	if (!s)
+		return (write(1, "(null)", 6));
+	while (s[i])
+	{
+		if (_prt_char(s[i]) == -1)
+			return (-1);
+		i++;
+	}
+	return (i);
+}
+
+int	_nsx_strlen(char *s)
+{
+	int	len;
+
+	len = 0;
+	while (s[len])
+		len++;
+	return (len);
+}
