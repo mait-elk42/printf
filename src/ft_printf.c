@@ -6,18 +6,18 @@
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 11:19:52 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/11/16 22:53:12 by mait-elk         ###   ########.fr       */
+/*   Updated: 2023/11/17 13:29:09 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	_prt_char(char c)
+static int	_prt_char(char c)
 {
 	return (write(1, &c, 1));
 }
 
-int	_prt_str(char *s)
+static int	_prt_str(char *s)
 {
 	int	i;
 
@@ -33,7 +33,7 @@ int	_prt_str(char *s)
 	return (i);
 }
 
-int _nsx_ullen(unsigned long ptr)
+static int _nsx_ptrlen(unsigned long ptr)
 {
 	int	i;
 
@@ -45,41 +45,152 @@ int _nsx_ullen(unsigned long ptr)
 	}
 	return (i);
 }
-int	_prt_pointer(unsigned long ptr)
+
+static int	_nsx_intlen(int n)
 {
-	int		i;
+	int	i;
+
+	i = 0;
+	if (n < 0)
+		i++;
+	while (n)
+	{
+		n /= 10;
+		i++;
+	}
+	return (i);
+}
+
+static int	_nsx_uintlen(unsigned int n)
+{
+	int	i;
+
+	i = 0;
+	while (n)
+	{
+		n /= 10;
+		i++;
+	}
+	return (i);
+}
+
+static int	_prt_int(int i)
+{
 	int		len;
 	char	*res;
-	char	*base;
+
+	len = _nsx_intlen(i);
+	if (i == 0)
+		return (_prt_char('0'));
+	if (i == -2147483648)
+		return (_prt_str("-2147483648"));
+	res = malloc(len + 1);
+	if (!res)
+		return (-1);
+	if (i < 0)
+	{
+		i *= -1;
+		res[0] = '-';
+	}
+	res[len--] = '\0';
+	while (i)
+	{
+		res[len--] = (i % 10) + 48;
+		i /= 10;
+	}
+	len = _prt_str(res);
+	if (len == -1)
+	{
+		free(res);
+		return (-1);
+	}
+	free(res);
+	return (len);
+}
+
+static int	_prt_uint(unsigned int i)
+{
+	int		len;
+	char	*res;
+
+	len = _nsx_uintlen(i);
+	if (i == 0)
+		return (_prt_char('0'));
+	res = malloc(len + 1);
+	if (!res)
+		return (-1);
+	if (i < 0)
+	{
+		i *= -1;
+		res[0] = '-';
+	}
+	res[len--] = '\0';
+	while (i)
+	{
+		res[len--] = (i % 10) + 48;
+		i /= 10;
+	}
+	len = _prt_str(res);
+	if (len == -1)
+	{
+		free(res);
+		return (-1);
+	}
+	free(res);
+	return (len);
+}
+
+static int	_prt_pointer(unsigned long ptr)
+{
+	int		len;
+	char	*res;
 
 	if (ptr == 0)
 		return (_prt_str("0x0"));
-	base = "0123456789abcdef";
-	len = _nsx_ullen(ptr);
+	len = _nsx_ptrlen(ptr);
 	res = malloc(len + 1);
 	if (!res)
 		return (-1);
 	res[len--] = '\0';
 	while (ptr)
 	{
-		res[len] = base[ptr % 16];
+		res[len--] = "0123456789abcdef"[ptr % 16];
 		ptr /= 16;
-		len--;
 	}
-	i = _prt_str("0x");
-	if (i == -1)
+	if (_prt_str("0x") == -1)
 	{
 		free (res);
 		return (-1);
 	}
 	len = _prt_str(res);
-	if (len == -1)
-	{
-		free (res);
-		return (-1);
-	}
 	free(res);
+	if (len == -1)
+		return (-1);
 	return (len + 2);
+}
+
+static int	_prt_xhex(unsigned long ptr,	char *base)
+{
+	int		len;
+	char	*res;
+
+	if (ptr == 0)
+		return (_prt_str("0"));
+	len = _nsx_ptrlen(ptr);
+	res = malloc(len + 1);
+	if (!res)
+		return (-1);
+	res[len--] = '\0';
+	while (ptr)
+	{
+		res[len--] = base[ptr % 16];
+		ptr /= 16;
+	}
+	len = _prt_str(res);
+	free(res);
+	if (len == -1)
+		return (-1);
+	return (len);
 }
 
 static int	_handle_this(char c, va_list *vaddress)
@@ -88,11 +199,19 @@ static int	_handle_this(char c, va_list *vaddress)
 		return (_prt_char(va_arg(*vaddress, int)));
 	else if (c == 's')
 		return (_prt_str(va_arg(*vaddress, char *)));
+	else if (c == 'd' || c == 'i')
+		return (_prt_int(va_arg(*vaddress, int)));
+	else if (c == 'u')
+		return (_prt_uint(va_arg(*vaddress, unsigned int)));
+	else if (c == 'x')
+		return (_prt_xhex(va_arg(*vaddress, unsigned long), "0123456789abcdef"));
+	else if (c == 'X')
+		return (_prt_xhex(va_arg(*vaddress, unsigned long), "0123456789ABCDEF"));
 	else if (c == 'p')
 		return (_prt_pointer(va_arg(*vaddress, unsigned long)));
 	else if (c == '%')
 		return (_prt_char('%'));
-	return (0);
+	return ( -1);
 }
 
 int	ft_printf(const char	*s, ...)

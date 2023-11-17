@@ -1,6 +1,6 @@
 D_SRC = src
 D_HDRS = include
-SRC = $(D_SRC)/ft_printf.c $(D_SRC)/ft_printers.c
+SRC = $(D_SRC)/ft_printf.c $(D_SRC)/ft_printers.c $(D_SRC)/ft_strlen.c 
 O_SRC = $(SRC:.c=.o)
 HDRS = $(D_HDRS)/ft_printf.h 
 NAME = libftprintf.a
