@@ -6,7 +6,7 @@
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 11:19:52 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/11/17 18:03:17 by mait-elk         ###   ########.fr       */
+/*   Updated: 2023/11/18 12:03:37 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int	ft_printf(const char	*s, ...)
 	va_list	list;
 
 	length = 0;
-	ret = 0;
 	va_start(list, s);
 	while (*s)
 	{
@@ -52,7 +51,10 @@ int	ft_printf(const char	*s, ...)
 		else
 			ret = _prt_char(*s);
 		if (ret == -1)
+		{
+			va_end(list);
 			return (-1);
+		}
 		length += ret;
 		s++;
 	}
