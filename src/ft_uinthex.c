@@ -6,7 +6,7 @@
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 17:57:39 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/11/17 18:02:55 by mait-elk         ###   ########.fr       */
+/*   Updated: 2023/11/18 12:20:01 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,7 @@ int	_prt_uinthex(unsigned int ptr,	char form)
 	res = malloc(len + 1);
 	if (!res)
 		return (-1);
-	res[len] = '\0';
-	len--;
+	res[len--] = '\0';
 	while (ptr)
 	{
 		res[len] = base[ptr % 16];

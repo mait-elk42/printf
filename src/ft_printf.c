@@ -6,28 +6,28 @@
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 11:19:52 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/11/18 12:14:14 by mait-elk         ###   ########.fr       */
+/*   Updated: 2023/11/18 12:15:15 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static int	_handle_this(char c, va_list vaddress)
+static int	_handle_this(char c, va_list list)
 {
 	if (c == 'c')
-		return (_prt_char(va_arg(vaddress, int)));
+		return (_prt_char(va_arg(list, int)));
 	else if (c == 's')
-		return (_prt_str(va_arg(vaddress, char *)));
+		return (_prt_str(va_arg(list, char *)));
 	else if (c == 'd' || c == 'i')
-		return (_prt_int(va_arg(vaddress, int)));
+		return (_prt_int(va_arg(list, int)));
 	else if (c == 'u')
-		return (_prt_uint(va_arg(vaddress, unsigned int)));
+		return (_prt_uint(va_arg(list, unsigned int)));
 	else if (c == 'x')
-		return (_prt_uinthex(va_arg(vaddress, unsigned int), 'x'));
+		return (_prt_uinthex(va_arg(list, unsigned int), 'x'));
 	else if (c == 'X')
-		return (_prt_uinthex(va_arg(vaddress, unsigned int), 'X'));
+		return (_prt_uinthex(va_arg(list, unsigned int), 'X'));
 	else if (c == 'p')
-		return (_prt_pointer(va_arg(vaddress, unsigned long)));
+		return (_prt_pointer(va_arg(list, unsigned long)));
 	else if (c == '%')
 		return (_prt_char('%'));
 	return (_prt_char(c));
